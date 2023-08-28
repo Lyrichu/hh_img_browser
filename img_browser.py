@@ -291,6 +291,11 @@ class ImageBrowser(QMainWindow):
         path = QFileDialog.getOpenFileNames(self, 'Open Image Files', QDir.currentPath(),
                                             get_supported_img_suffix_str())
 
+        # If a previous worker is running, stop it
+        if hasattr(self, 'worker') and self.worker.isRunning():
+            self.worker.stop()
+            self.worker.wait()  # Wait for the worker thread to finish
+
         # 重置滚动区域
         for i in reversed(range(self.scrollLayout.count())):
             self.scrollLayout.itemAt(i).widget().deleteLater()
